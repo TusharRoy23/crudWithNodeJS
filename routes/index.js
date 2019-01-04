@@ -1,11 +1,7 @@
-// Full Documentation - https://www.turbo360.co/docs
 const turbo = require("turbo360")({ site_id: process.env.TURBO_APP_ID });
 const vertex = require("vertex360")({ site_id: process.env.TURBO_APP_ID });
 const router = vertex.router();
 
-/*  This is the home route. It renders the index.mustache page from the views directory.
-	Data is rendered using the Mustache templating engine. For more
-	information, view here: https://mustache.github.io/#demo */
 const Profile = require("../models/Profile");
 
 router.get("/", (req, res) => {
@@ -35,10 +31,6 @@ router.get("/update", (req, res) => {
         updateValue: req.session.updateValue,
         errors: req.flash.errors
       });
-
-      // res.json({
-      //   confirmation: req.session.updateValue
-      // });
     })
     .catch(err => {
       res.json({
