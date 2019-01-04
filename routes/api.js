@@ -4,19 +4,6 @@ const vertex = require("vertex360")({ site_id: process.env.TURBO_APP_ID });
 const router = vertex.router();
 const Profile = require("../models/Profile");
 
-// router.use(bodyParser.json());
-// router.use(bodyParser.urlencoded({ extended: true }));
-
-/*  This is a sample API route. */
-
-// router.get('/:resource', (req, res) => {
-// 	res.json({
-// 		confirmation: 'success',
-// 		resource: req.params.resource,
-// 		query: req.query // from the url query string
-// 	})
-// })
-
 router.get("/delete/:id", (req, res) => {
   var query = { _id: req.params.id };
   Profile.deleteOne(query)
@@ -84,27 +71,6 @@ router.post("/updateProfile", (req, res) => {
       });
   }
 });
-
-//Non-Restful and will be router.put for update
-// router.get("/profile/update", (req, res) => {
-//   const query = req.query;
-//   const profileId = query.id;
-//   //delete query["id"];
-
-//   Profile.findByIdAndUpdate(profileId, query, { new: true })
-//     .then(profiles => {
-//       res.json({
-//         confirmation: "success",
-//         data: profiles
-//       });
-//     })
-//     .catch(err => {
-//       res.json({
-//         confirmation: "Failed",
-//         message: err.message
-//       });
-//     });
-// });
 
 //Remove
 router.get("/profile/remove", (req, res) => {
