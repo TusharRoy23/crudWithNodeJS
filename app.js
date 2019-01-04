@@ -1,4 +1,3 @@
-// Full Documentation - https://www.turbo360.co/docs
 const vertex = require("vertex360")({ site_id: process.env.TURBO_APP_ID });
 
 const bodyParser = require("body-parser");
@@ -8,13 +7,6 @@ const expressValidator = require("express-validator");
 const flash = require("express-flash-messages");
 
 //const app = vertex.express() // initialize app
-
-/*  
-	Apps can also be initialized with config options as shown in the commented out example below. Options
-	include setting views directory, static assets directory, and database settings. To see default config
-	settings, view here: https://www.turbo360.co/docs 
-
-*/
 
 const config = {
   views: "views", // Set views directory
