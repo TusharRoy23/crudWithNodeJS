@@ -11,12 +11,15 @@ router.get("/", (req, res) => {
         profile: profile,
         success: req.flash.success,
         errors: req.flash.errors,
-        formValue: req.flash.formValue
+        formValue: req.flash.formValue,
+        imageFile: req.flash.imageFile
       });
       req.flash.errors = null;
       req.flash.formValue = null;
       req.flash.success = null;
       req.session.updateValue = null;
+      req.flash.imageFile = null;
+      req.session.profileImg = null;
     })
     .catch(err => {
       res.status(400).send("Unable to fatch");
@@ -29,8 +32,14 @@ router.get("/update", (req, res) => {
       res.render("update", {
         profile: profile,
         updateValue: req.session.updateValue,
-        errors: req.flash.errors
+        errors: req.flash.errors,
+        imageFile: req.flash.imageFile,
+        profileImg: req.session.profileImg,
+        success: req.flash.success
       });
+      req.flash.imageFile = null;
+      req.flash.errors = null;
+      req.flash.success = null;
     })
     .catch(err => {
       res.json({
