@@ -25,6 +25,7 @@ router.get("/updateForm/:id", (req, res) => {
   Profile.findById(query)
     .then(profile => {
       req.session.updateValue = profile;
+      req.session.profileImg = profile.photo;
       res.redirect("/update");
     })
     .catch(err => {
@@ -55,13 +56,52 @@ router.post("/updateProfile", (req, res) => {
 
   if (errors) {
     req.flash.errors = errors;
+    req.session.profileImg = req.session.updateValue.photo;
     req.session.updateValue = req.body;
+
+    if (req.files["photo"]) {
+      if (!req.files["photo"][0].originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        req.flash.imageFile = "Only jpg/jpeg/png/gif are allowed";
+      } else {
+        req.flash.imageFile = null;
+      }
+    }
     res.redirect("/update");
   } else {
-    Profile.findByIdAndUpdate(id, req.body, { new: true })
-      .then(profile => {
+    if (req.files["photo"]) {
+      if (!req.files["photo"][0].originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        req.flash.errors = errors;
+        req.session.profileImg = req.session.updateValue.photo;
+        req.session.updateValue = req.body;
+        req.flash.imageFile = "Only jpg/jpeg/png/gif are allowed";
+        res.redirect("/update");
+      } else {
+        var arr = {
+          firstName: firstName,
+          lastName: lastName,
+          age: age,
+          position: position,
+          team: team,
+          photo: req.files["photo"][0].filename
+        };
         req.flash.success = "<b>" + id + " Successfully Updated !</b>";
-        res.redirect("/");
+      }
+    } else {
+      var arr = {
+        firstName: firstName,
+        lastName: lastName,
+        age: age,
+        position: position,
+        team: team
+      };
+      req.flash.success = "<b>" + id + " Successfully Updated !</b>";
+    }
+
+    Profile.findByIdAndUpdate(id, arr, { new: true, useFindAndModify: false })
+      .then(profile => {
+        req.session.updateValue = profile;
+        req.session.profileImg = profile.photo;
+        res.redirect("/update");
       })
       .catch(err => {
         res.json({
@@ -110,7 +150,6 @@ router.get("/profile", (req, res) => {
 });
 
 router.post("/profile", (req, res) => {
-  //console.log(req.body);
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let age = req.body.age;
@@ -132,10 +171,47 @@ router.post("/profile", (req, res) => {
     req.flash.success = false;
     req.flash.formValue = req.body;
 
+    if (req.files["photo"]) {
+      if (!req.file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        req.flash.imageFile = "Only jpg/jpeg/png/gif are allowed";
+      } else {
+        req.flash.imageFile = null;
+      }
+    }
+
     res.redirect("/");
   } else {
-    req.flash.success = "<b>Successfully Inserted !</b>";
-    Profile.create(req.body)
+    if (req.files["photo"]) {
+      if (!req.files["photo"][0].originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        req.flash.errors = errors;
+        req.flash.success = false;
+        req.flash.formValue = req.body;
+        req.flash.imageFile = "Only jpg/jpeg/png/gif are allowed";
+        res.redirect("/");
+      } else {
+        req.flash.success = "<b>Successfully Inserted !</b>";
+        var arr = {
+          firstName: firstName,
+          lastName: lastName,
+          age: age,
+          position: position,
+          team: team,
+          photo: req.files["photo"][0].filename
+        };
+      }
+    } else {
+      req.flash.success = "<b>Successfully Inserted !</b>";
+      var arr = {
+        firstName: firstName,
+        lastName: lastName,
+        age: age,
+        position: position,
+        team: team,
+        photo: ""
+      };
+    }
+
+    Profile.create(arr)
       .then(profile => {
         res.redirect("/");
       })
