@@ -6,12 +6,13 @@
 		<div class="col-lg-12 col-md-12 col-sm-12 text-center">
 			<h2>Welcome to Turbo & Mustache Template</h2>
 			<div class="row">
-				<form action="/api/profile" method="post">
+				<form action="/api/profile" method="post" enctype="multipart/form-data">
 					<input type="text" placeholder="First Name" class="form-control" value="{{formValue.firstName}}" name="firstName"/><br>{{#errors.firstName.msg }}<p class="alert alert-danger text-center">{{ errors.firstName.msg }}</p>{{/errors.firstName.msg }}
 					<input type="text" placeholder="Last Name" class="form-control" value="{{formValue.lastName}}" name="lastName"/><br>{{#errors.lastName.msg }}<p class="alert alert-danger text-center">{{ errors.lastName.msg }}</p>{{/errors.lastName.msg }}
 					<input type="number" placeholder="Age" class="form-control" value="{{formValue.age}}" name="age"/><br>{{#errors.age.msg }}<p class="alert alert-danger text-center">{{ errors.age.msg }}</p>{{/errors.age.msg }}
 					<input type="text" placeholder="Position" class="form-control" value="{{formValue.position}}" name="position"/><br>{{#errors.position.msg }}<p class="alert alert-danger text-center">{{errors.position.msg }}</p>{{/errors.position.msg }}
 					<input type="text" placeholder="Team" class="form-control" value="{{formValue.team}}" name="team"/><br>{{#errors.team.msg }}<p class="alert alert-danger text-center">{{ errors.team.msg }}</p>{{/errors.team.msg }}
+					<input type="file" class="form-control" name="photo"><br>{{#imageFile }}<p class="alert alert-danger text-center">{{{ imageFile }}}</p>{{/imageFile }}
 					<input type="submit" class="btn btn-md btn-primary btn-block" value="Submit" />
 				</form>
 			</div>
@@ -33,6 +34,7 @@
 						<th>Age</th>
 						<th>Team</th>
 						<th>Position</th>
+						<th>Profile Img</th>
 						<th colspan="2">Action</th>
 					</tr>
 				</thead>
@@ -44,6 +46,15 @@
 						<td>{{ age }}</td>
 						<td>{{ team }}</td>
 						<td>{{ position }}</td>
+						<td>
+							{{^photo}}
+								<img src="uploads/no-image.png" alt="Profile Picture" width="50" height="50"  style="border:1px solid #2E2E2E">
+							{{/photo}}
+
+							{{#photo}}
+								<img src="uploads/{{ photo }}" alt="Profile Picture" width="50" height="50" style="border:1px solid #2E2E2E">
+							{{/photo}}
+						</td>
 						<td>
 							<a href="/api/delete/{{id}}" class="btn btn-md btn-danger">
 								Delete
