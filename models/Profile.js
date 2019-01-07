@@ -5,7 +5,8 @@ const Profile = new mongoose.Schema({
   lastName: { type: String, trim: true, default: "" },
   age: { type: Number, default: 0 },
   team: { type: String, trim: true, default: "" },
-  position: { type: String, trim: true, default: "" }
+  position: { type: String, trim: true, default: "" },
+  photo: { type: String, trim: true, default: "" }
 });
 
 module.exports = mongoose.model("Profile", Profile);
